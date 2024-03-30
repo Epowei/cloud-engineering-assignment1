@@ -1,0 +1,61 @@
+---
+- name: Install apache and host html file
+  hosts: all
+  remote_user: ansible
+  become: true
+  vars:
+    git_repo_url: "https://github.com/Epowei/AltSchool-third-assignment.git"
+    html_dir: "/home/ansible/web"
+
+
+  tasks:
+    - name: update packages
+      when: ansible_os_family == 'Debian'
+      apt:
+        update_cache: yes
+
+    - name: update packages
+      when: ansible_os_family == 'RedHat'
+      yum:
+        update_cache: yes
+
+    - name: Install Apache on Ubuntu
+      when: ansible_os_family == 'Debian'
+      apt:
+        name: apache2
+        state: present
+
+    - name: Install Apache on CentOS
+      when: ansible_os_family == 'RedHat'
+      yum:
+        name: httpd
+        state: present
+
+          # - name: Delete default index.html file
+          # file:
+          #path: /var/www/html/index.html
+          #state: absent
+
+
+    - name: Clone HTML file from Git
+      git:
+        repo: "{{ git_repo_url }}"
+        dest: "{{ html_dir }}"
+
+    - name: Copy index.html
+      copy:
+        src: /home/ansible/web/index.html
+        dest: /var/www/html
+        remote_src: true
+
+    - name: Copy assets folder
+      copy:
+        src: /home/ansible/web/assets
+        dest: /var/www/html     
+        remote_src: true
+
+    - name: Restart Apache service
+      service:
+        name: "{{ 'apache2' if ansible_os_family == 'Debian' else 'httpd' }}"
+        state: restarted
+
