@@ -1,0 +1,37 @@
+---
+- name: Laravel Setup
+  hosts: slave-node
+  tasks:
+    - name: Copy Script to slave node
+      copy:
+        src: lamp.sh
+        dest: ~/ansible/lamp.sh
+        mode: 0755
+
+    - name: Execute Laravel App Deployment Script
+      shell: ~/ansible/lamp.sh https://github.com/laravel/laravel.git passwd123 Test jane
+
+    - name: Check PHP Application Accessibility
+      command: curl http://192.168.60.5
+      register: php_app_response
+      ignore_errors: true
+
+    - name: Display Message if PHP Application is Accessible
+      debug:
+        msg: "PHP Application is Accessible"
+      when: php_app_response.rc == 0
+
+    - name: Setup Cron to Check Server Uptime Every 12AM
+      cron:
+        name: "Execute Cron Every 12AM"
+        minute: "0"
+        hour: "0"
+        job: "uptime >> ~/uptime.log"
+
+    - name: Check Server Uptime
+      command: uptime -p
+      register: uptime_out
+
+    - name: Print Out Server Uptime
+      debug:
+        var: uptime_out.stdout
