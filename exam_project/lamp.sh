@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# echo display in gold
+# echo display in green
 green_echo() {
     echo -e "\e[32m$1\e[0m"
 }
