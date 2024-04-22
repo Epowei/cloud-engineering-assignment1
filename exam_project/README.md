@@ -18,12 +18,12 @@
 
 - The Vagrantfile used for provisioning the two Ubuntu-based server is attached with other files including snapshots of the deployments.
 
-- The steps required to deploy a LAMP (stands for Linus, Apache, Mysql and PHP) stack laravel application using first bash script and then ansible will be briefly outlined in this documentation.
+- The steps required to deploy a LAMP (stands for Linus, Apache, Mysql and PHP) stack laravel application using first,bash script and then ansible will be briefly outlined in this documentation.
 
 
 ### - Bash Script Task:
 
-The required bash script is provided below with default arguments provided when running the script.
+The required bash script is provided below with four default arguments provided when running the script.
 The code is broken down into functions for reusability.
 
 `lamp.sh`
